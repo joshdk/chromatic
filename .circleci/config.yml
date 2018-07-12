@@ -1,0 +1,25 @@
+version: 2
+
+jobs:
+  build:
+    docker:
+    - image: circleci/golang:1.10.3
+    working_directory: /go/src/github.com/joshdk/chromatic
+    steps:
+    - checkout
+    - run:
+        name: Describe commit
+        command: git describe --tags
+    - run:
+        name: Run tests
+        command: |
+          gofmt -l -s -w .
+
+workflows:
+  version: 2
+  build:
+    jobs:
+    - build:
+        filters:
+          tags:
+            only: /.*/
