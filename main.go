@@ -18,6 +18,11 @@ func mainFunc(args []string) error {
 func main() {
 	if err := mainFunc(nil); err != nil {
 		fmt.Fprintf(os.Stderr, "chromatic: %s\n", err.Error())
-		os.Exit(1)
+		switch err {
+		case chromatic.ErrorTimeoutExceeded:
+			os.Exit(2)
+		default:
+			os.Exit(1)
+		}
 	}
 }
