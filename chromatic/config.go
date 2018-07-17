@@ -19,10 +19,16 @@ type startConfig struct {
 }
 
 type endConfig struct {
-	URL     string `yaml:"url"`
-	Title   string `yaml:"title"`
-	Cookie  string `yaml:"cookie"`
-	Timeout int64  `yaml:"timeout"`
+	URL     string       `yaml:"url"`
+	Title   string       `yaml:"title"`
+	Cookie  cookieConfig `yaml:"cookie"`
+	Timeout int64        `yaml:"timeout"`
+}
+
+type cookieConfig struct {
+	Name   string `yaml:"name" json:"name"`
+	Domain string `yaml:"domain" json:"domain"`
+	Value  string `yaml:"-" json:"value"`
 }
 
 type Config struct {

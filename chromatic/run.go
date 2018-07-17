@@ -49,7 +49,6 @@ func RunWithConfig(config *Config) error {
 	// Subscribe to load event stream
 	eventChan, errChan, err := client.Events()
 	if err != nil {
-		//panic(err)
 		return err
 	}
 
@@ -57,16 +56,17 @@ func RunWithConfig(config *Config) error {
 	for {
 		select {
 		case <-timedCtx.Done():
-			fmt.Printf("Timeout expired.\n")
 			return errors.New("ran out of time")
 
 		case err := <-errChan:
-			fmt.Printf("Runtime error.\n")
 			return err
 
 		case page := <-eventChan:
-			fmt.Printf("Page loaded.\n")
-			fmt.Printf("  %s (%s)\n", page.Title, page.URL)
+			if Match(page, config.End.Title, config.End.URL, config.End.Cookie) {
+				output, _ := Report(page)
+				fmt.Println(output)
+				return nil
+			}
 		}
 	}
 
