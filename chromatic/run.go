@@ -11,6 +11,10 @@ import (
 	"time"
 )
 
+var (
+	ErrorTimeoutExceeded = errors.New("timeout exceeded")
+)
+
 func RunWithConfig(config *Config) error {
 	// Create a cancelable context. Cancelling this context will halt all
 	// event, rpc, and exec machinery.
@@ -18,15 +22,14 @@ func RunWithConfig(config *Config) error {
 
 	// Create a timeout context. Waiting on this context will ensure we don't
 	// hang forever.
-	timedCtx, _ := context.WithTimeout(context.Background(), time.Duration(config.End.Timeout)*time.Second)
+	timedCtx, stop := context.WithTimeout(context.Background(), time.Duration(config.End.Timeout)*time.Second)
 
 	// Create browser object with params
 	browser := NewBrowser(cancelCtx, config.Start.URL, config.Browser.Flags...)
 
-	// This will wait for the browser process to die.
+	// This will shutdown streams, rpc clients, and wait for the browser process to die.
 	defer browser.Wait()
-
-	// This will shutdown streams, rpc clients, and kill the browser process.
+	defer stop()
 	defer cancel()
 
 	// Launch (exec) browser process
@@ -56,7 +59,7 @@ func RunWithConfig(config *Config) error {
 	for {
 		select {
 		case <-timedCtx.Done():
-			return errors.New("ran out of time")
+			return ErrorTimeoutExceeded
 
 		case err := <-errChan:
 			return err
@@ -69,8 +72,6 @@ func RunWithConfig(config *Config) error {
 			}
 		}
 	}
-
-	return nil
 }
 
 func Run(filename string) error {
