@@ -4,7 +4,7 @@
 
 # Chromatic
 
-🍪 Configurable human assisted Chrome automation
+🍪 Chromatic is a tool for Configurable human assisted Chrome automation.
 
 ## Installing
 
@@ -20,7 +20,7 @@ $ go get -u github.com/joshdk/chromatic
 
 There are certain services that require programmatic interaction, but otherwise make it difficult. Web-only APIs, [CAPTCHAs](https://en.wikipedia.org/wiki/CAPTCHA), and MFA are a few examples of things that might not work well with typical automation.
 
-This tool, `chromatic`, implements an escape-hatch around these difficulties. It can be configured to open up a Chrome window to a given starting URL, and will continue to be interactive until a given set of ending conditions are met, at which time the Chrome window will close. This user interaction is typically a login flow.
+`Chromatic` implements an escape-hatch around these difficulties. It can be configured to open up a Chrome window to a given starting URL, and will continue to be interactive until a given set of ending conditions are met, at which time the Chrome window will close. This user interaction is typically a login flow.
 
 When `chromatic` exits, it will dump details about the last visited page as json. This json (and the session data contained within) is meant to be consumed by additional automation.
 
