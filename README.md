@@ -30,7 +30,7 @@ In this example we will use `chromatic` to extract and consume a web session for
 
 ### Configuration
 
-The following `chromatic.yml` will launch Chrome to CircleCI's Github/Bitbucket authorization page.
+The following [`examples/circleci.yml`](https://github.com/joshdk/chromatic/blob/master/examples/circleci.yml) will launch Chrome to CircleCI's Github/Bitbucket authorization page.
 
 ```yaml
 start:
@@ -54,7 +54,7 @@ You can then login to Github using your username, password, & maybe an MFA code.
 Once a match is found, Chrome will exit successfully and `chromatic` will dump details about the last page as json.
 
 ```
-$ chromatic | tee page.json
+$ chromatic examples/circleci.yml | tee page.json
 {
   "url": "https://circleci.com/dashboard",
   "title": "CircleCI",
