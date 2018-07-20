@@ -1,0 +1,10 @@
+start:
+  url: https://circleci.com/vcs-authorize/
+
+end:
+  timeout: 120
+  url: https://circleci.com/dashboard
+  cookie:
+    name: ring-session
+    domain: circleci.com
+  title: CircleCI

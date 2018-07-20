@@ -12,11 +12,15 @@ import (
 )
 
 func mainFunc(args []string) error {
-	return chromatic.Run("chromatic.yml")
+	configFile := "chromatic.yml"
+	if len(args) >= 2 {
+		configFile = args[1]
+	}
+	return chromatic.Run(configFile)
 }
 
 func main() {
-	if err := mainFunc(nil); err != nil {
+	if err := mainFunc(os.Args); err != nil {
 		fmt.Fprintf(os.Stderr, "chromatic: %s\n", err.Error())
 		switch err {
 		case chromatic.ErrorTimeoutExceeded:
