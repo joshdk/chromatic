@@ -25,7 +25,10 @@ func RunWithConfig(config *Config) error {
 	timedCtx, stop := context.WithTimeout(context.Background(), time.Duration(config.End.Timeout)*time.Second)
 
 	// Create browser object with params
-	browser := NewBrowser(cancelCtx, config.Start.URL, config.Browser.Flags...)
+	browser, err := NewBrowser(cancelCtx, config.Start.URL, config.Browser.Flags...)
+	if err != nil {
+		return err
+	}
 
 	// This will shutdown streams, rpc clients, and wait for the browser process to die.
 	defer browser.Wait()
