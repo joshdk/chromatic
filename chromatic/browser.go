@@ -6,6 +6,9 @@ package chromatic
 
 import (
 	"context"
+	"fmt"
+	"io/ioutil"
+	"os"
 	"os/exec"
 )
 
@@ -15,37 +18,59 @@ var (
 		"--no-experiments",
 		"--no-first-run",
 		"--remote-debugging-port=9222",
-		"--user-data-dir=./tmp",
 	}
 	defaultDebuggerAddress = "http://127.0.0.1:9222"
 )
 
-// NewBrowser creates a Browser object that can start Chrome with optional
-// args, and will initially load the given url.
-func NewBrowser(ctx context.Context, url string, args ...string) *Browser {
-	var b = Browser{
-		name: defaultChromeName,
-		args: defaultChromeArgs,
+func tempDir() (string, func(), error) {
+	name, err := ioutil.TempDir("", "chromatic-")
+	if err != nil {
+		return "", nil, err
 	}
 
-	for _, arg := range args {
-		b.args = append(b.args, arg)
+	return name, func() {
+		if err := os.RemoveAll(name); err != nil {
+			panic(err)
+		}
+	}, nil
+}
+
+// NewBrowser creates a Browser object that can start Chrome with optional
+// args, and will initially load the given url.
+func NewBrowser(ctx context.Context, url string, args ...string) (*Browser, error) {
+	var (
+		dataDir, cleanup, err = tempDir()
+		b                     = Browser{
+			name:    defaultChromeName,
+			args:    defaultChromeArgs,
+			cleanup: cleanup,
+		}
+	)
+
+	if err != nil {
+		return nil, err
 	}
+
+	b.args = append(b.args, "--user-data-dir="+dataDir)
+	b.args = append(b.args, args...)
 	b.args = append(b.args, url)
+
+	fmt.Printf("args are: %+v\n", b.args)
 
 	b.ctx, b.cancel = context.WithCancel(ctx)
 	b.cmd = exec.CommandContext(b.ctx, b.name, b.args...)
-	return &b
+	return &b, nil
 }
 
 // Browser represents a single Chrome instance that can be started, stopped,
 // and waited on.
 type Browser struct {
-	name   string
-	args   []string
-	ctx    context.Context
-	cmd    *exec.Cmd
-	cancel context.CancelFunc
+	name    string
+	args    []string
+	ctx     context.Context
+	cmd     *exec.Cmd
+	cancel  context.CancelFunc
+	cleanup func()
 }
 
 // Address returns the Chrome Debugging Protocol address.
@@ -66,5 +91,6 @@ func (b *Browser) Stop() error {
 
 // Wait returns when the Chrome process eventually terminates.
 func (b *Browser) Wait() error {
+	defer b.cleanup()
 	return b.cmd.Wait()
 }
