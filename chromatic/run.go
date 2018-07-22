@@ -43,12 +43,15 @@ func RunWithConfig(config *Config) error {
 	// Greate remote debugger object
 	client := NewClient(cancelCtx, browser.Address())
 
-	// Browser may not have started listening yet
-	time.Sleep(2 * time.Second)
-
-	// Connect to remote debugger protocol RPC endpoint
-	if err := client.Connect(); err != nil {
-		//panic(err)
+	for tries := 0; tries <= 10; tries++ {
+		// Connect to remote debugger protocol RPC endpoint
+		err = client.Connect()
+		if err == nil {
+			break
+		}
+		time.Sleep(time.Second)
+	}
+	if err != nil {
 		return err
 	}
 
