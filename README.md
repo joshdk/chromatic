@@ -6,6 +6,8 @@
 
 🍪 Configurable human assisted Chrome automation
 
+![chromatic-demo](https://user-images.githubusercontent.com/307183/43058824-72d6681e-8dfe-11e8-94d2-2e71d847d425.gif)
+
 ## Installing
 
 ### From source
