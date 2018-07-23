@@ -48,7 +48,7 @@ func Load(filename string) (*Config, error) {
 
 func LoadBytes(body []byte) (*Config, error) {
 	var config Config
-	if err := yaml.Unmarshal(body, &config); err != nil {
+	if err := yaml.UnmarshalStrict(body, &config); err != nil {
 		return nil, err
 	}
 
