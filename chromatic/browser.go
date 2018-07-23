@@ -6,7 +6,6 @@ package chromatic
 
 import (
 	"context"
-	"fmt"
 	"io/ioutil"
 	"os"
 	"os/exec"
@@ -54,8 +53,6 @@ func NewBrowser(ctx context.Context, url string, args ...string) (*Browser, erro
 	b.args = append(b.args, "--user-data-dir="+dataDir)
 	b.args = append(b.args, args...)
 	b.args = append(b.args, url)
-
-	fmt.Printf("args are: %+v\n", b.args)
 
 	b.ctx, b.cancel = context.WithCancel(ctx)
 	b.cmd = exec.CommandContext(b.ctx, b.name, b.args...)
