@@ -1,0 +1,9 @@
+start:
+  url: https://slack.com/signin
+
+end:
+  timeout: 120
+  url: slack.com/messages
+  cookie:
+    name: d
+    domain: .slack.com

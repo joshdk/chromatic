@@ -1,0 +1,10 @@
+start:
+  url: https://www.eatclub.com/login
+
+end:
+  timeout: 120
+  url: https://www.eatclub.com/menu
+  cookie:
+    name: sessionid
+    domain: .eatclub.com
+  title: EAT Club - Menu

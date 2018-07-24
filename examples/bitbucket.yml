@@ -1,0 +1,10 @@
+start:
+  url: https://bitbucket.org/account/signin
+
+end:
+  timeout: 120
+  url: https://bitbucket.org/dashboard/overview
+  cookie:
+    name: bb_session
+    domain: bitbucket.org
+  title: Overview — Bitbucket

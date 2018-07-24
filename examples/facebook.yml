@@ -1,0 +1,10 @@
+start:
+  url: https://www.facebook.com/login.php
+
+end:
+  timeout: 120
+  url: https://www.facebook.com/
+  cookie:
+    name: xs
+    domain: .facebook.com
+  title: Facebook
