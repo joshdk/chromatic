@@ -1,0 +1,10 @@
+start:
+  url: https://github.com/login
+
+end:
+  timeout: 120
+  url: https://github.com
+  cookie:
+    name: user_session
+    domain: github.com
+  title: GitHub

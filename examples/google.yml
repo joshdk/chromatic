@@ -1,0 +1,10 @@
+start:
+  url: https://accounts.google.com/ServiceLogin
+
+end:
+  timeout: 120
+  url: https://myaccount.google.com/
+  cookie:
+    name: HSID
+    domain: .google.com
+  title: Google Account
