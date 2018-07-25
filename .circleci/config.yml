@@ -25,20 +25,20 @@ jobs:
           goimports -l -w $(find . -name '*.go' | grep -v /vendor/)
           go test -race -v ./...
     - run:
-        name: Build binary
-        command: CGO_ENABLED=0 GOOS=darwin GOARCH=amd64 go build -a -ldflags="-s -w" -o build/chromatic .
+        name: Build binaries
+        command: |
+          CGO_ENABLED=0 GOOS=darwin GOARCH=amd64 go build -a -ldflags="-s -w" -o artifacts/chromatic_darwin_amd64 .
+          CGO_ENABLED=0 GOOS=darwin GOARCH=386 go build -a -ldflags="-s -w" -o artifacts/chromatic_darwin_386 .
     - run:
         name: Compress binary
-        command: upx --best --ultra-brute build/chromatic
+        command: upx --best --ultra-brute artifacts/chromatic_*
     - run:
         name: Checksum binary
-        command: sha256sum --binary --tag build/chromatic | tee checksums.txt
+        working_directory: artifacts
+        command: sha256sum --binary --tag chromatic_* | tee checksums.txt
     - store_artifacts:
-        path: build/chromatic
-        destination: /chromatic
-    - store_artifacts:
-        path: checksums.txt
-        destination: /checksums.txt
+        path: artifacts
+        destination: /artifacts
 
 workflows:
   version: 2
