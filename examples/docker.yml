@@ -1,0 +1,10 @@
+start:
+  url: https://hub.docker.com/sso/start/?next=https://hub.docker.com/
+
+end:
+  timeout: 120
+  url: https://hub.docker.com/
+  cookie:
+    name: token
+    domain: hub.docker.com
+  title: Docker Hub
