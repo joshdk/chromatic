@@ -27,8 +27,13 @@ jobs:
     - run:
         name: Build binaries
         command: |
-          CGO_ENABLED=0 GOOS=darwin GOARCH=amd64 go build -a -ldflags="-s -w" -o artifacts/chromatic_darwin_amd64 .
-          CGO_ENABLED=0 GOOS=darwin GOARCH=386 go build -a -ldflags="-s -w" -o artifacts/chromatic_darwin_386 .
+          VERSION="$(git describe --tags)"
+          CGO_ENABLED=0 GOOS=darwin GOARCH=amd64 go build -a \
+            -ldflags="-s -w -X main.version=$VERSION" \
+            -o artifacts/chromatic_darwin_amd64 .
+          CGO_ENABLED=0 GOOS=darwin GOARCH=386 go build -a \
+            -ldflags="-s -w -X main.version=$VERSION" \
+            -o artifacts/chromatic_darwin_386 .
     - run:
         name: Compress binary
         command: upx --best --ultra-brute artifacts/chromatic_*
