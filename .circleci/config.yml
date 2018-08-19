@@ -1,24 +1,17 @@
 version: 2
 
 jobs:
-  build:
+  test:
     docker:
     - image: circleci/golang:1.10.3
     working_directory: /go/src/github.com/joshdk/chromatic
     steps:
     - checkout
     - run:
-        name: Describe commit
-        command: git describe --tags
-    - run:
         name: Install dependencies
         working_directory: /tmp
         command: |
-          sudo env GOOS=darwin GOARCH=amd64 $(which go) install std
           go get golang.org/x/tools/cmd/goimports
-          wget https://github.com/upx/upx/releases/download/v3.94/upx-3.94-amd64_linux.tar.xz
-          tar --strip=1 -xf upx-3.94-amd64_linux.tar.xz
-          sudo install upx /usr/bin
     - run:
         name: Run tests
         command: |
@@ -26,6 +19,21 @@ jobs:
           test -z "$(gofmt -l -s  $gofiles)"
           test -z "$(goimports -l $gofiles)"
           go test -race -v ./...
+
+  build:
+    docker:
+    - image: circleci/golang:1.10.3
+    working_directory: /go/src/github.com/joshdk/chromatic
+    steps:
+    - checkout
+    - run:
+        name: Install dependencies
+        working_directory: /tmp
+        command: |
+          sudo env GOOS=darwin GOARCH=amd64 $(which go) install std
+          wget https://github.com/upx/upx/releases/download/v3.94/upx-3.94-amd64_linux.tar.xz
+          tar --strip=1 -xf upx-3.94-amd64_linux.tar.xz
+          sudo install upx /usr/bin
     - run:
         name: Build binaries
         command: |
@@ -46,12 +54,14 @@ jobs:
     - store_artifacts:
         path: artifacts
         destination: /artifacts
+    - persist_to_workspace:
+        root: /go/src/github.com/joshdk/chromatic
+        paths:
+        - artifacts
 
 workflows:
   version: 2
   build:
     jobs:
-    - build:
-        filters:
-          tags:
-            only: /.*/
+    - test
+    - build
