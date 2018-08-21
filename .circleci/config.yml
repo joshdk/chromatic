@@ -55,9 +55,20 @@ jobs:
         path: artifacts
         destination: /artifacts
     - persist_to_workspace:
-        root: /go/src/github.com/joshdk/chromatic
+        root: .
         paths:
         - artifacts
+
+  release:
+    docker:
+    - image: cibuilds/github:0.10.0
+    working_directory: /go/src/github.com/joshdk/chromatic
+    steps:
+    - attach_workspace:
+        at: .
+    - run:
+        name: Upload artifacts
+        command: ghr -u joshdk -r chromatic -replace ${CIRCLE_TAG} artifacts
 
 workflows:
   version: 2
@@ -65,3 +76,20 @@ workflows:
     jobs:
     - test
     - build
+
+  release:
+    jobs:
+    - build:
+        filters:
+          branches:
+            ignore: /.*/
+          tags:
+            only: /.*/
+    - release:
+        requires:
+        - build
+        filters:
+          branches:
+            ignore: /.*/
+          tags:
+            only: /.*/
