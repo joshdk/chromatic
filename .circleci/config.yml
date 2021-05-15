@@ -3,7 +3,7 @@ version: 2
 jobs:
   test:
     docker:
-    - image: circleci/golang:1.10.3
+    - image: circleci/golang:1.16.3
     working_directory: /go/src/github.com/joshdk/chromatic
     steps:
     - checkout
@@ -22,7 +22,7 @@ jobs:
 
   build:
     docker:
-    - image: circleci/golang:1.10.3
+    - image: circleci/golang:1.16.3
     working_directory: /go/src/github.com/joshdk/chromatic
     steps:
     - checkout
@@ -41,9 +41,6 @@ jobs:
           CGO_ENABLED=0 GOOS=darwin GOARCH=amd64 go build -a \
             -ldflags="-s -w -X main.version=$version" \
             -o artifacts/chromatic_darwin_amd64 .
-          CGO_ENABLED=0 GOOS=darwin GOARCH=386 go build -a \
-            -ldflags="-s -w -X main.version=$version" \
-            -o artifacts/chromatic_darwin_386 .
     - run:
         name: Compress binary
         command: upx --best --ultra-brute artifacts/chromatic_*
@@ -61,7 +58,7 @@ jobs:
 
   release:
     docker:
-    - image: cibuilds/github:0.10.0
+    - image: cibuilds/github:0.12.0
     working_directory: /go/src/github.com/joshdk/chromatic
     steps:
     - attach_workspace:
