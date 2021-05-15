@@ -1,6 +1,7 @@
 [![CircleCI][circleci-badge]][circleci-link]
 [![Go Report Card][go-report-card-badge]][go-report-card-link]
 [![License][license-badge]][license-link]
+[![GitHub release][github-release-badge]][github-release-link]
 
 # Chromatic
 
@@ -16,6 +17,15 @@ You can use `go get` to install this tool by running:
 
 ```bash
 $ go get -u github.com/joshdk/chromatic
+```
+
+### Release binary
+
+Alternatively, you can download an OSX [release][github-release-link] binary by running:
+
+```bash
+$ wget -O chromatic -q https://github.com/joshdk/chromatic/releases/download/0.1.0/chromatic_darwin_amd64
+$ sudo install chromatic /usr/local/bin
 ```
 
 ## Motivations
@@ -95,6 +105,8 @@ This library is distributed under the [MIT License][license-link], see [LICENSE.
 
 [circleci-badge]:         https://circleci.com/gh/joshdk/chromatic.svg?&style=shield
 [circleci-link]:          https://circleci.com/gh/joshdk/chromatic/tree/master
+[github-release-badge]:   https://img.shields.io/github/release/joshdk/chromatic.svg
+[github-release-link]:    https://github.com/joshdk/chromatic/releases/latest
 [go-report-card-badge]:   https://goreportcard.com/badge/github.com/joshdk/chromatic
 [go-report-card-link]:    https://goreportcard.com/report/github.com/joshdk/chromatic
 [license-badge]:          https://img.shields.io/badge/license-MIT-green.svg
